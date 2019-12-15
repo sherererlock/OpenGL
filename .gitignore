@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+.vs/OpenGL/v15/Browse.VC.db
+.vs/OpenGL/v15/Browse.VC.opendb
+.vs/OpenGL/v15/ipch/AutoPCH/b3f2da3f451a1f8b/APPLICATION.ipch
