@@ -137,32 +137,63 @@ int main(void)
 		return -1;
 	}
 
-	float position[] =
+	float triangles[] =
 	{
-		-0.5f,	-0.5f, // 0
-		 0.5f,	-0.5f, // 1
-		 0.5f,	 0.5f, // 2
-		 -0.5f,  0.5f, // 3
+		0.0f,	-0.5f, // 0
+		0.5f,	-0.5f, // 1
+		0.25f,	 0.5f, // 2
 	};
 
-	unsigned int index[] =
+	unsigned int tindex[] =
+	{
+		0, 1, 2,
+	};
+
+	unsigned int qindex[] =
 	{
 		0, 1, 2,
 		2, 3, 0,
 	};
 
-	unsigned int bufferid;
-	glGenBuffers(1, &bufferid);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferid);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), position, GL_STATIC_DRAW);
+	float position[] =
+	{
+		-0.5f,	-0.5f, // 0
+		0.0f,	-0.5f, // 1
+		0.0f,	 0.5f, // 2
+		-0.5f,  0.5f, // 3
+	};
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	// Quad
+	unsigned int qvao;
+	glGenVertexArrays(1, &qvao);
+	glBindVertexArray(qvao);
 
-	unsigned int ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), index, GL_STATIC_DRAW);
+	unsigned int qid;
+	glGenBuffers(1, &qid);
+	glBindBuffer(GL_ARRAY_BUFFER, qid);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), position, GL_STATIC_DRAW);
+
+	GLCall(glEnableVertexAttribArray(0));
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 设置顶点属性的layout，并且与vao绑定
+
+	unsigned int qibo;
+	glGenBuffers(1, &qibo);
+	
+	// triangle
+	unsigned int tvao;
+	glGenVertexArrays(1, &tvao);
+	glBindVertexArray(tvao);
+
+	unsigned int tid;
+	glGenBuffers(1, &tid);
+	glBindBuffer(GL_ARRAY_BUFFER, tid);
+	glBufferData(GL_ARRAY_BUFFER, 3 * 2 * sizeof(float), triangles, GL_STATIC_DRAW);
+
+	GLCall(glEnableVertexAttribArray(0));
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 设置顶点属性的layout，并且与vao绑定
+
+	unsigned int tibo;
+	glGenBuffers(1, &tibo);
 
 	ShaderSource source = ParseShader("res//shader//Basic.shader");
 
@@ -181,8 +212,24 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 		
+		// Draw Quad
+		glBindVertexArray(qvao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), qindex, GL_STATIC_DRAW);
+
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
+		// Draw Triangle
+		glBindVertexArray(tvao);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(unsigned int), tindex, GL_STATIC_DRAW);
+
+		GLCall(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr));
+
+		glBindVertexArray(tvao);
+
+		// Uniform
 		GLCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
 
 		if (r >= 1.0f)
