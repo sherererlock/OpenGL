@@ -6,6 +6,28 @@
 #include<sstream>
 #include<string>
 
+#define ASSERT(x) if (!(x)) __debugbreak();
+
+#define GLCall(x) GLClearError();\
+	x;\
+	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
+static void GLClearError()
+{
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static bool GLLogCall(const char* fname, const char* file, int line)
+{
+	if (GLenum error= glGetError() != GL_NO_ERROR)
+	{
+		std::cout << "[OpenGL Error](" << error << "):"<< fname<<" "<< file<<" :"<<line<<std::endl;
+		return false;
+	}
+
+	return true;
+}
+
 struct ShaderSource
 {
 	std::string VertexShaderSource;
@@ -130,10 +152,10 @@ int main(void)
 	unsigned int bufferid;
 	glGenBuffers(1, &bufferid);
 	glBindBuffer(GL_ARRAY_BUFFER, bufferid);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), position, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
 	unsigned int ibo;
 	glGenBuffers(1, &ibo);
@@ -151,7 +173,7 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
