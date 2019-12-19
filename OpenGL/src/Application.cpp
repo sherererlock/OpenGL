@@ -9,6 +9,7 @@
 #include"Renderer.h"
 #include"VertexBuffer.h"
 #include"IndexBuffer.h"
+#include"VertexArrays.h"
 
 struct ShaderSource
 {
@@ -145,38 +146,23 @@ int main(void)
 		-0.5f,  0.5f, // 3
 	};
 
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+
+	VertexArrays va;
+
 	// Quad
-	unsigned int qvao;
-	glGenVertexArrays(1, &qvao);
-	glBindVertexArray(qvao);
-
 	VertexBuffer qvb(position, 4 * 2 * sizeof(float));
-
-	GLCall(glEnableVertexAttribArray(0));
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 设置顶点属性的layout，并且与vao绑定
-
 	IndexBuffer qib(qindex, 6);
 
-	// triangle
-	unsigned int tvao;
-	glGenVertexArrays(1, &tvao);
-	glBindVertexArray(tvao);
-
+	// Triangle
 	VertexBuffer tvb(triangles, 3 * 2 * sizeof(float));
-
-	GLCall(glEnableVertexAttribArray(0));
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 设置顶点属性的layout，并且与vao绑定
-
 	IndexBuffer tib(tindex, 3);
 
 	ShaderSource source = ParseShader("res//shader//Basic.shader");
-
 	unsigned int shaderprogram = CreateShader(source.VertexShaderSource, source.PixelShaderSource);
 	glUseProgram(shaderprogram);
-
 	unsigned int location = glGetUniformLocation(shaderprogram, "u_Color");
-
-	//glUniform4f(location, 1.0f, 0.2f, 0.0f, 1.0f);
 
 	float r = 1.0f;
 	float increment = 0.01f;
@@ -187,18 +173,14 @@ int main(void)
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		// Draw Quad
-		glBindVertexArray(qvao);
-		/*qbuffer.Bind();*/
-
+		va.AddBuffer(qvb, layout);
+		qib.Bind();
 		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		// Draw Triangle
-		glBindVertexArray(tvao);
-
-		//tbuffer.Bind();
+		va.AddBuffer(tvb, layout);
+		tib.Bind();
 		GLCall(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr));
-
-		glBindVertexArray(tvao);
 
 		// Uniform
 		GLCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));

@@ -36,3 +36,7 @@
 .vs/OpenGL/v15/ipch/AutoPCH/4d0440cfc1ab7084/RENDERER.ipch
 .vs/OpenGL/v15/ipch/AutoPCH/4e0ae792bbf0c887/RENDERER.ipch
 .vs/OpenGL/v15/ipch/AutoPCH/f31d010325609af9/VERTEXBUFFER.ipch
+.vs/OpenGL/v15/ipch/AutoPCH/5f8e3e37e279b1bb/VERTEXARRAYS.ipch
+*.ipch
+*.json
+*.sqlite
