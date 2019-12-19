@@ -33,3 +33,7 @@
 .vs/OpenGL/v15/Browse.VC.db
 .vs/OpenGL/v15/Browse.VC.opendb
 .vs/OpenGL/v15/ipch/AutoPCH/b3f2da3f451a1f8b/APPLICATION.ipch
+.vs/OpenGL/v15/ipch/AutoPCH/3a808e1e19aa25f/INDEXBUFFER.ipch
+.vs/OpenGL/v15/ipch/AutoPCH/4d0440cfc1ab7084/RENDERER.ipch
+.vs/OpenGL/v15/ipch/AutoPCH/4e0ae792bbf0c887/RENDERER.ipch
+.vs/OpenGL/v15/ipch/AutoPCH/f31d010325609af9/VERTEXBUFFER.ipch
