@@ -40,3 +40,4 @@
 *.ipch
 *.json
 *.sqlite
+bin/intermediate/x64/Debug/OpenGL.tlog/unsuccessfulbuild
