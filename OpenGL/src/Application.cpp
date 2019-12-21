@@ -11,6 +11,7 @@
 #include"IndexBuffer.h"
 #include"VertexArrays.h"
 #include"Shader.h"
+#include "VertexBufferLayout.h"
 
 int main(void)
 {
@@ -67,6 +68,8 @@ int main(void)
 	};
 
 	{
+		Renderer renderer;
+
 		VertexArrays va;
 		VertexBufferLayout layout;
 		layout.Push<float>(2);
@@ -93,7 +96,7 @@ int main(void)
 		while (!glfwWindowShouldClose(window))
 		{
 			/* Render here */
-			glClear(GL_COLOR_BUFFER_BIT);
+			renderer.Clear();
 
 			// Uniform
 			shader.Bind();
@@ -101,13 +104,11 @@ int main(void)
 
 			// Draw Quad
 			va.AddBuffer(qvb, layout);
-			qib.Bind();
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+			renderer.Draw(va, qib, shader);
 
 			// Draw Triangle
 			va.AddBuffer(tvb, layout);
-			tib.Bind();
-			GLCall(glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr));
+			renderer.Draw(va, tib, shader);
 
 			if (r >= 1.0f)
 				increment = -0.01f;

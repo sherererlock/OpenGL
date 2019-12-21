@@ -20,8 +20,6 @@
 #include<sstream>
 #include<string>
 
-#include"Renderer.h"
-
 struct ShaderSource
 {
 	std::string VertexShaderSource;

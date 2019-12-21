@@ -1,5 +1,6 @@
 #include "VertexArrays.h"
 #include "Renderer.h"
+#include "VertexBufferLayout.h"
 
 VertexArrays::VertexArrays()
 {
@@ -21,7 +22,7 @@ void VertexArrays::AddBuffer(const VertexBuffer & vb, const VertexBufferLayout& 
 	unsigned int offset = 0;
 	for (unsigned int i = 0; i < elements.size(); i++)
 	{
-		GLCall(glEnableVertexAttribArray(0));
+		GLCall(glEnableVertexAttribArray(i));
 		glVertexAttribPointer(i, elements[i].count, elements[i].type, elements[i].normalized, layout.GetStride(),(const void*)offset); // 设置顶点属性的layout，并且与vao绑定
 		offset += elements[i].count * VertexBufferElement::GetSizeOf(elements[i].type);
 	}

@@ -41,3 +41,5 @@
 *.json
 *.sqlite
 bin/intermediate/x64/Debug/OpenGL.tlog/unsuccessfulbuild
+*.log
+.vs/OpenGL/v15/.suo
