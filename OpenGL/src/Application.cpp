@@ -11,7 +11,8 @@
 #include"IndexBuffer.h"
 #include"VertexArrays.h"
 #include"Shader.h"
-#include "VertexBufferLayout.h"
+#include"VertexBufferLayout.h"
+#include"Texture.h" 
 
 int main(void)
 {
@@ -43,9 +44,9 @@ int main(void)
 
 	float triangles[] =
 	{
-		0.0f,	-0.5f, // 0
-		0.5f,	-0.5f, // 1
-		0.25f,	 0.5f, // 2
+		0.0f,	-0.5f, 1.0f, 0.0f,// 0
+		0.5f,	-0.5f, 0.0f, 0.0f,// 1
+		0.25f,	 0.5f, 0.5f, 1.0f,// 2
 	};
 
 	unsigned int tindex[] =
@@ -61,34 +62,48 @@ int main(void)
 
 	float position[] =
 	{
-		-0.5f,	-0.5f, // 0
-		0.0f,	-0.5f, // 1
-		0.0f,	 0.5f, // 2
-		-0.5f,  0.5f, // 3
+		-0.5f,	-0.5f, 0.0f, 0.0f,// 0
+		0.0f,	-0.5f, 1.0f, 0.0f,// 1
+		0.0f,	 0.5f, 1.0f, 1.0f,// 2
+		-0.5f,  0.5f,  0.0f, 1.0f// 3
 	};
 
 	{
+
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+		GLCall(glEnable(GL_BLEND));
+
 		Renderer renderer;
 
 		VertexArrays va;
 		VertexBufferLayout layout;
 		layout.Push<float>(2);
+		layout.Push<float>(2);
 
 		// Quad
-		VertexBuffer qvb(position, 4 * 2 * sizeof(float));
+		VertexBuffer qvb(position, 4 * 4 * sizeof(float));
 		IndexBuffer qib(qindex, 6);
 
 		// Triangle
-		VertexBuffer tvb(triangles, 3 * 2 * sizeof(float));
+		VertexBuffer tvb(triangles, 3 * 4 * sizeof(float));
 		IndexBuffer tib(tindex, 3);
 
 		Shader shader("res//shader//Basic.shader");
-		shader.UnBind();
+		shader.Bind();
+
+		Texture texture1("res//textures//test.jpg");
+		texture1.Bind();
+
+		Texture texture2("res//textures//test2.jpg");
+
+		shader.SetValue("u_Texture", 0);
+		shader.SetValue("u_Color", 0.0f, 0.0f, 0.0f, 0.0f);
 
 		va.UnBind();
 		qvb.UnBind();
 		tvb.UnBind();
 		tib.UnBind();
+		shader.UnBind();
 
 		float r = 1.0f;
 		float increment = 0.01f;
@@ -100,22 +115,16 @@ int main(void)
 
 			// Uniform
 			shader.Bind();
-			shader.SetValue("u_Color", r, 0.3f, 0.8f, 1.0f);
 
 			// Draw Quad
+			texture1.Bind();
 			va.AddBuffer(qvb, layout);
 			renderer.Draw(va, qib, shader);
 
 			// Draw Triangle
+			texture2.Bind();
 			va.AddBuffer(tvb, layout);
 			renderer.Draw(va, tib, shader);
-
-			if (r >= 1.0f)
-				increment = -0.01f;
-			else if (r <= 0.0f)
-				increment = 0.01f;
-
-			r += increment;
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);

@@ -42,6 +42,7 @@ public:
 	Shader(const std::string& filepath);
 	~Shader();
 
+	void SetValue(const std::string& name, int slot);
 	void SetValue(const std::string& name, float v0, float v1, float v2, float v3);
 
 	void Bind() const;
