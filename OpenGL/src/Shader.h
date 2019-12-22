@@ -20,6 +20,8 @@
 #include<sstream>
 #include<string>
 
+#include"glm/glm.hpp"
+
 struct ShaderSource
 {
 	std::string VertexShaderSource;
@@ -42,6 +44,7 @@ public:
 	Shader(const std::string& filepath);
 	~Shader();
 
+	void SetValue(const std::string& name, const glm::mat4 mat);
 	void SetValue(const std::string& name, int slot);
 	void SetValue(const std::string& name, float v0, float v1, float v2, float v3);
 

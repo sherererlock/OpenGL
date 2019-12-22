@@ -13,6 +13,9 @@
 #include"Shader.h"
 #include"VertexBufferLayout.h"
 #include"Texture.h" 
+#include"glm/glm.hpp"
+#include"glm/gtc/matrix_transform.hpp"
+
 
 int main(void)
 {
@@ -41,6 +44,8 @@ int main(void)
 		glfwTerminate();
 		return -1;
 	}
+
+	glm::mat4 pro = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
 	float triangles[] =
 	{
@@ -96,6 +101,7 @@ int main(void)
 
 		Texture texture2("res//textures//test2.jpg");
 
+		shader.SetValue("u_MVP", pro);
 		shader.SetValue("u_Texture", 0);
 		shader.SetValue("u_Color", 0.0f, 0.0f, 0.0f, 0.0f);
 
